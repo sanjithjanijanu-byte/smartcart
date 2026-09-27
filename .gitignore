@@ -115,3 +115,7 @@ client/public/__manus__/version.json
 
 
 .vercel
+
+.agent/
+.agents/
+skills-lock.json

@@ -28,6 +28,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SmartCartPortal from "@/components/SmartCartPortal";
 import Timeline from "@/components/ui/timeline";
+import CartAnatomy from "@/components/CartAnatomy";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -249,6 +250,8 @@ export default function Home() {
         </div>
         <div className="steps-foot rise-in"><span className="soft-check"><Check size={14} /></span> That's it. Your receipt is in the app, and your evening is yours again.</div>
       </section>
+
+      <CartAnatomy />
 
       <section className="hardware-section">
         <div className="hardware-intro rise-in">

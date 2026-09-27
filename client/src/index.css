@@ -488,3 +488,533 @@ button { color: inherit; }
   .smartcart-glyph-portal:not([data-gp-motion-override="true"]) [data-gp-content] { min-height: 0; opacity: 1 !important; background: #163b2a !important; }
   .smartcart-glyph-portal:not([data-gp-motion-override="true"]) .smartcart-glyph-background img { transform: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   PREMIUM GSAP SCROLL ANATOMY & CINEMA VIDEO STAGE
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.premium-anatomy-section {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(440px, 47%) 1fr;
+  min-height: calc(100vh * 5);
+  background: #060709;
+  color: #e5e5eb;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: clip;
+}
+
+/* Dynamic ambient radial illumination responding to current hardware stage */
+.premium-ambient-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: background 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.9;
+  filter: blur(80px);
+}
+
+/* ── LEFT: Pinned Cinema Stage (ScrollTrigger pinned) ───────────────────────── */
+.premium-stage-pinned {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  padding: clamp(24px, 4vw, 56px);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  box-sizing: border-box;
+}
+
+.premium-stage-shell {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Stage top bar */
+.premium-stage-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stage-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(12px);
+}
+
+.stage-chip-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--orange);
+  box-shadow: 0 0 12px var(--orange);
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.stage-chip-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.stage-timecode {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Stage chapter selector pills */
+.premium-chapter-nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.premium-chapter-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.premium-chapter-pill:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.premium-chapter-pill.is-active {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.premium-chapter-pill .pill-name {
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+
+/* Video cinema viewport */
+.premium-video-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 50px rgba(255, 95, 0, 0.15), 0 25px 60px rgba(0, 0, 0, 0.85);
+  transition: box-shadow 0.6s ease, border-color 0.4s ease;
+}
+
+.premium-scrub-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #050507;
+  pointer-events: none;
+}
+
+/* Reticle crosshair blueprint corners */
+.premium-video-card .reticle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.premium-video-card .reticle.top-left {
+  top: 10px;
+  left: 10px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+.premium-video-card .reticle.top-right {
+  top: 10px;
+  right: 10px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+.premium-video-card .reticle.bottom-left {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+.premium-video-card .reticle.bottom-right {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Floating telemetry HUD */
+.premium-hud-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.hud-metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(10, 12, 16, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.hud-status {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: color 0.35s ease;
+}
+
+.hud-divider {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.hud-value {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.hud-control-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.hud-control-btn:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  transform: scale(1.04);
+}
+
+/* Scrub rail indicator */
+.premium-scrub-rail {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.premium-scrub-rail .rail-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+  transition: background-color 0.4s ease;
+}
+
+/* Stage bottom captions */
+.premium-stage-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.caption-subhead {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.caption-counter {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.caption-counter b {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── RIGHT: High-Density Editorial Hardware Cards ──────────────────────────── */
+.premium-cards-scroller {
+  display: flex;
+  flex-direction: column;
+  padding: 0 clamp(28px, 5.5vw, 88px);
+  position: relative;
+  z-index: 5;
+}
+
+.premium-hw-card {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(56px, 8vw, 100px) 0;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  will-change: transform, opacity;
+  transition: opacity 0.4s ease;
+}
+
+.premium-hw-card:last-child {
+  border-bottom: none;
+}
+
+/* Giant background numeral watermark */
+.card-ambient-numeral {
+  position: absolute;
+  top: 15%;
+  right: -10px;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(100px, 15vw, 200px);
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.025);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  letter-spacing: -0.05em;
+}
+
+/* Card kicker eyebrow */
+.card-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stage-accent, #ff5f00);
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.card-kicker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.card-kicker-icon {
+  color: currentColor;
+}
+
+/* Main typography */
+.card-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(2.2rem, 3.4vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin: 0 0 20px;
+  max-width: 17ch;
+  position: relative;
+  z-index: 1;
+}
+
+.card-description {
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.7;
+  color: #a2a6b4;
+  margin: 0 0 32px;
+  max-width: 48ch;
+  position: relative;
+  z-index: 1;
+}
+
+/* Micro-specs grid */
+.card-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 32px;
+  max-width: 520px;
+  position: relative;
+  z-index: 1;
+}
+
+.spec-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(8px);
+}
+
+.spec-cell-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.spec-cell-value {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+/* Card footer CTA */
+.card-footer-cta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.card-scrub-anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-scrub-anchor:hover {
+  background: var(--stage-accent, #ff5f00);
+  border-color: var(--stage-accent, #ff5f00);
+  transform: translateX(3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.card-badge-secure {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.04em;
+}
+
+/* ── Responsive Adaptations ─────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .premium-anatomy-section {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .premium-stage-pinned {
+    position: sticky;
+    top: 0;
+    height: auto;
+    padding: 24px 20px 20px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(6, 7, 9, 0.94);
+    backdrop-filter: blur(20px);
+  }
+
+  .premium-stage-shell {
+    max-width: 100%;
+  }
+
+  .premium-chapter-pill .pill-name {
+    display: none;
+  }
+
+  .premium-cards-scroller {
+    padding: 0 20px;
+  }
+
+  .premium-hw-card {
+    min-height: auto;
+    padding: 60px 0;
+  }
+
+  .card-ambient-numeral {
+    font-size: 90px;
+    top: 20px;
+    right: 0;
+  }
+}
+
+
