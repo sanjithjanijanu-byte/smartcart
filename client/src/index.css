@@ -252,37 +252,346 @@ button { color: inherit; }
 .journey-intro-inner > p:not(.eyebrow) { max-width: 550px; margin: 17px auto 0; color: #9fa198; font-size: 13px; line-height: 1.8; }
 .scroll-hint { display: inline-flex; align-items: center; gap: 10px; margin-top: 30px; color: #8e9188; font-size: 8px; font-weight: 700; letter-spacing: .17em; }
 .scroll-line { display: inline-block; width: 30px; height: 1px; background: var(--orange); }
-.timeline-frame { position: relative; overflow: clip; background: var(--night); }
-.sc-timeline { position: relative; height: auto; min-height: max(100vh, 640px); color: #f5f1e9; background: var(--night); }
-.sc-timeline-stage { position: relative; z-index: 2; height: 100vh; min-height: 640px; display: flex; flex-direction: column; padding: clamp(28px, 4.4vw, 64px) clamp(22px, 6.2vw, 96px) 25px; overflow: hidden; background: var(--night); }
-.sc-timeline-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex: 0 0 auto; }
-.sc-timeline-eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 13px; color: #a4a69d; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
-.sc-timeline-eyebrow > span { width: 7px; height: 7px; border-radius: 50%; background: var(--timeline-accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--timeline-accent) 15%, transparent); }
-.sc-timeline-heading h2 { margin: 0; font-size: clamp(28px, 3.1vw, 43px); line-height: 1; letter-spacing: -.065em; font-weight: 600; }
-.sc-timeline-period { padding-bottom: 3px; color: var(--timeline-muted); font-size: 11px; font-weight: 600; letter-spacing: .06em; white-space: nowrap; }
-.sc-timeline-track-clip { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; margin: 28px 0 18px; overflow: hidden; }
-.sc-timeline-track { height: min(51vh, 390px); min-height: 330px; display: flex; align-items: stretch; width: max-content; padding-right: clamp(22px, 6.2vw, 96px); will-change: transform; }
-.sc-timeline-cover { position: relative; flex: 0 0 clamp(260px, 26vw, 360px); height: 100%; overflow: hidden; border-radius: 18px; isolation: isolate; }
-.sc-timeline-cover > img { width: 100%; height: 100%; object-fit: cover; }
-.sc-timeline-cover-shade { position: absolute; z-index: 1; inset: 0; background: linear-gradient(180deg, rgba(16,19,16,.08), rgba(16,19,16,.76)); }
-.sc-timeline-cover-copy { position: absolute; z-index: 2; inset: auto 25px 27px; display: grid; gap: 12px; }
-.sc-timeline-cover-copy > span { color: #eeeae2; font-size: 8px; font-weight: 700; letter-spacing: .14em; }
-.sc-timeline-cover-copy > strong { color: white; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(25px, 3vw, 37px); font-weight: 400; line-height: 1.02; letter-spacing: -.035em; }
-.sc-milestone { position: relative; flex: 0 0 clamp(290px, 30vw, 390px); height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 25px clamp(23px, 3vw, 40px); border-right: 1px solid rgba(255,255,255,.1); }
-.sc-milestone-rail { position: absolute; top: 24%; left: 0; right: 0; height: 1px; display: flex; align-items: center; background: color-mix(in srgb, var(--timeline-accent) 34%, transparent); }
-.sc-milestone-dot { position: relative; z-index: 1; width: 11px; height: 11px; flex: 0 0 11px; border: 3px solid var(--night); border-radius: 50%; background: var(--timeline-accent); box-shadow: 0 0 0 1px var(--timeline-accent), 0 0 18px color-mix(in srgb, var(--timeline-accent) 35%, transparent); }
-.sc-milestone-line { height: 1px; flex: 1; background: linear-gradient(90deg, var(--timeline-accent), rgba(255,95,0,0)); }
-.sc-milestone-copy { display: grid; align-content: start; gap: 12px; padding-top: 30%; }
-.sc-milestone-date { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--timeline-accent); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.sc-milestone-date > span { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid color-mix(in srgb, var(--timeline-accent) 45%, transparent); border-radius: 50%; color: #ff9b64; font-size: 8px; }
-.sc-milestone h3 { max-width: 12ch; margin: 0; color: #f5f1e9; font-size: clamp(23px, 2.5vw, 31px); line-height: 1.04; letter-spacing: -.06em; font-weight: 600; }
-.sc-milestone-description { max-width: 29ch; margin: 0; color: var(--timeline-muted); font-size: 12px; line-height: 1.7; }
-.sc-milestone-index { position: absolute; right: 24px; bottom: 20px; color: rgba(255,255,255,.14); font-size: 43px; font-weight: 600; letter-spacing: -.08em; }
-.sc-timeline-footer { display: flex; align-items: center; justify-content: space-between; gap: 22px; flex: 0 0 auto; color: #85887f; font-size: 8px; font-weight: 700; letter-spacing: .14em; }
-.sc-timeline-footer > span:last-child { white-space: nowrap; }
-.sc-timeline-footer > span:last-child > span { margin-left: 7px; color: var(--timeline-accent); font-size: 12px; }
-.sc-timeline-progress { height: 2px; flex: 1; overflow: hidden; background: rgba(255,255,255,.14); }
-.sc-timeline-progress > span { display: block; width: 100%; height: 100%; background: var(--timeline-accent); transform: scaleX(0); }
+.timeline-frame { position: relative; background: var(--night); }
+.sc-timeline { position: relative; width: 100%; color: #f5f1e9; background: var(--night); }
+.sc-timeline-stage {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(24px, 3.5vh, 48px) clamp(24px, 5.5vw, 84px) clamp(20px, 3vh, 36px);
+  box-sizing: border-box;
+  overflow: hidden;
+  background: radial-gradient(circle at 80% 20%, rgba(255, 95, 0, 0.04) 0%, transparent 60%), var(--night);
+}
+.sc-timeline-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex: 0 0 auto;
+}
+.sc-timeline-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  color: #a4a69d;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+.sc-timeline-eyebrow > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--timeline-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--timeline-accent) 20%, transparent);
+}
+.sc-timeline-heading h2 {
+  margin: 0;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -.05em;
+  font-weight: 600;
+}
+.sc-timeline-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.sc-timeline-period {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--timeline-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+.sc-timeline-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sc-timeline-nav-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f5f1e9;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sc-timeline-nav-btn:hover:not(:disabled) {
+  border-color: var(--timeline-accent);
+  background: rgba(255, 95, 0, 0.15);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.sc-timeline-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.sc-timeline-track-clip {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  margin: clamp(16px, 2.5vh, 28px) 0;
+  overflow: hidden;
+}
+.sc-timeline-track {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  height: clamp(340px, 46vh, 440px);
+  width: max-content;
+  padding-right: clamp(40px, 8vw, 140px);
+  will-change: transform;
+}
+.sc-timeline-cover {
+  position: relative;
+  flex: 0 0 clamp(280px, 25vw, 360px);
+  height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  isolation: isolate;
+  background: #111412;
+}
+.sc-timeline-cover > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.sc-timeline-cover:hover > img {
+  transform: scale(1.04);
+}
+.sc-timeline-cover-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16,19,16,0.12) 0%, rgba(16,19,16,0.85) 100%);
+}
+.sc-timeline-cover-copy {
+  position: absolute;
+  z-index: 2;
+  inset: auto 24px 26px;
+  display: grid;
+  gap: 10px;
+}
+.sc-timeline-cover-copy > span {
+  color: #ff9b64;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .15em;
+}
+.sc-timeline-cover-copy > strong {
+  color: white;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.03em;
+}
+.sc-milestone {
+  position: relative;
+  flex: 0 0 clamp(300px, 26vw, 390px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 26px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+}
+.sc-milestone.is-active {
+  border-color: rgba(255, 95, 0, 0.45);
+  background: rgba(255, 95, 0, 0.04);
+  box-shadow: 0 10px 30px rgba(255, 95, 0, 0.08);
+}
+.sc-milestone-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sc-milestone-date-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(255, 95, 0, 0.12);
+  border: 1px solid rgba(255, 95, 0, 0.25);
+  color: #ff9b64;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.sc-milestone-date-chip > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--timeline-accent);
+}
+.sc-milestone-index-chip {
+  font-family: 'DM Mono', monospace, sans-serif;
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.sc-milestone.is-active .sc-milestone-index-chip {
+  color: #ff9b64;
+}
+.sc-milestone-rail {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  display: flex;
+  align-items: center;
+  margin: 18px 0 14px;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 2px;
+}
+.sc-milestone-rail-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, var(--timeline-accent), #ff9b64);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.sc-milestone-dot {
+  position: absolute;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  transform: translate(-2px, 0);
+  border-radius: 50%;
+  background: var(--night);
+  border: 2.5px solid var(--timeline-accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--timeline-accent) 50%, transparent);
+}
+.sc-milestone-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1 1 auto;
+  justify-content: center;
+}
+.sc-milestone-tag {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.sc-milestone.is-active .sc-milestone-tag {
+  color: #ff9b64;
+}
+.sc-milestone h3 {
+  margin: 0;
+  color: #f5f1e9;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.15;
+  letter-spacing: -.04em;
+  font-weight: 600;
+}
+.sc-milestone-description {
+  margin: 0;
+  color: var(--timeline-muted);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.sc-milestone-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.sc-milestone-phase {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .06em;
+}
+.sc-timeline-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex: 0 0 auto;
+  color: #85887f;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+.sc-timeline-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sc-timeline-dot-pill {
+  width: 24px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.sc-timeline-dot-pill.is-active {
+  width: 42px;
+  background: var(--timeline-accent);
+  box-shadow: 0 0 10px rgba(255, 95, 0, 0.4);
+}
+.sc-timeline-dot-pill:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.25);
+}
+.sc-timeline-progress-wrap {
+  flex: 1;
+  max-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sc-timeline-progress {
+  height: 2px;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255,255,255,.12);
+}
+.sc-timeline-progress > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--timeline-accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
 .journey-outro { min-height: 195px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 50px 20px; text-align: center; color: #f1eee7; background: var(--night); }
 .outro-stamp { width: 43px; height: 43px; display: grid; place-items: center; margin-bottom: 14px; border: 1px solid rgba(255,255,255,.16); border-radius: 14px; color: var(--orange-light); }
 .journey-outro p { margin: 0; color: #999c92; font-size: 8px; font-weight: 700; letter-spacing: .18em; }
@@ -380,21 +689,48 @@ button { color: inherit; }
   .journey-intro-inner { text-align: left; }
   .journey-intro-inner > p:not(.eyebrow) { margin-left: 0; font-size: 12px; }
   .scroll-hint { margin-top: 21px; font-size: 7px; }
-  .sc-timeline { height: auto; min-height: max(100svh, 620px); }
-  .sc-timeline-stage { height: 100svh; min-height: 620px; padding: 26px 18px 20px; }
+  .sc-timeline { height: auto !important; min-height: 0 !important; }
+  .sc-timeline-stage { height: auto !important; min-height: 0 !important; padding: 36px 18px 44px !important; overflow: visible !important; }
+  .sc-timeline-heading { flex-direction: column; align-items: flex-start; gap: 16px; }
   .sc-timeline-heading h2 { font-size: 28px; }
-  .sc-timeline-eyebrow { margin-bottom: 10px; font-size: 8px; }
-  .sc-timeline-period { font-size: 9px; }
-  .sc-timeline-track-clip { margin: 20px 0 17px; }
-  .sc-timeline-track { height: min(55vh, 420px); min-height: 350px; }
-  .sc-timeline-cover { flex-basis: 76vw; border-radius: 15px; }
-  .sc-milestone { flex-basis: 82vw; padding: 20px 22px; }
-  .sc-milestone-rail { top: 24%; }
-  .sc-milestone-copy { gap: 11px; padding-top: 33%; }
-  .sc-milestone h3 { max-width: 14ch; font-size: 28px; }
-  .sc-milestone-description { max-width: 31ch; font-size: 11px; }
-  .sc-milestone-index { right: 17px; bottom: 15px; font-size: 38px; }
-  .sc-timeline-footer { gap: 14px; font-size: 7px; letter-spacing: .1em; }
+  .sc-timeline-eyebrow { margin-bottom: 8px; font-size: 8px; }
+  .sc-timeline-controls { width: 100%; justify-content: space-between; }
+  .sc-timeline-period { font-size: 9px; padding: 4px 10px; }
+  .sc-timeline-track-clip {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 22px 0 20px !important;
+    padding-bottom: 6px;
+  }
+  .sc-timeline-track-clip::-webkit-scrollbar { display: none; }
+  .sc-timeline-track {
+    height: auto !important;
+    min-height: 360px !important;
+    transform: none !important;
+    padding-right: 18px !important;
+    gap: 16px !important;
+  }
+  .sc-timeline-cover {
+    flex: 0 0 85vw !important;
+    min-height: 360px !important;
+    border-radius: 18px !important;
+    scroll-snap-align: center;
+  }
+  .sc-milestone {
+    flex: 0 0 85vw !important;
+    min-height: 360px !important;
+    padding: 20px 20px !important;
+    border-radius: 18px !important;
+    scroll-snap-align: center;
+  }
+  .sc-milestone-content { gap: 8px; }
+  .sc-milestone h3 { font-size: 22px; }
+  .sc-milestone-description { font-size: 11.5px; }
+  .sc-timeline-footer { flex-wrap: wrap; gap: 14px; justify-content: center; font-size: 8px; }
+  .sc-timeline-progress-wrap { order: 2; max-width: 100%; width: 100%; }
   .journey-outro { min-height: 165px; }.journey-outro p { max-width: 280px; line-height: 1.65; }
   .contact-section { grid-template-columns: 1fr; gap: 38px; padding: 80px 22px; }
   .contact-copy h2 { font-size: clamp(53px,12vw,75px); }
