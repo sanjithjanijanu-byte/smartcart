@@ -14,6 +14,7 @@ import {
   Menu,
   QrCode,
   ReceiptText,
+  RotateCcw,
   ScanLine,
   ShieldCheck,
   ShoppingBasket,
@@ -31,6 +32,34 @@ import Timeline from "@/components/ui/timeline";
 import CartAnatomy from "@/components/CartAnatomy";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const DEMO_ITEMS = [
+  { id: "avocado", name: "Ripe avocados", desc: "Organic · 2 pieces", price: 120, weight: 300, thumb: "🥑", thumbClass: "" },
+  { id: "tomato", name: "Vine tomatoes", desc: "Farm fresh · 500 g", price: 84, weight: 500, thumb: "🍅", thumbClass: "tomato" },
+  { id: "oatmilk", name: "Oatly Oat Milk", desc: "Barista Edition · 1 L", price: 210, weight: 1020, thumb: "🥛", thumbClass: "oatmilk" },
+  { id: "bread", name: "Artisan Sourdough", desc: "Freshly baked · 400 g", price: 140, weight: 420, thumb: "🥖", thumbClass: "bread" },
+];
+
+function playScanChirp() {
+  try {
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.09);
+  } catch {
+    // Graceful fallback if audio is not permitted by browser policy
+  }
+}
 
 const steps = [
   {
@@ -68,6 +97,37 @@ const steps = [
 export default function Home() {
   const pageRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(2);
+  const [isScanning, setIsScanning] = useState(false);
+  const [weightPulse, setWeightPulse] = useState(false);
+  const [securityMode, setSecurityMode] = useState<"verified" | "discrepancy">("discrepancy");
+  const [reminderState, setReminderState] = useState<"idle" | "added" | "dismissed">("idle");
+
+  const visibleItems = DEMO_ITEMS.slice(0, cartCount);
+  const basketTotal = visibleItems.reduce((acc, item) => acc + item.price, 0);
+  const totalWeightKg = (visibleItems.reduce((acc, item) => acc + item.weight, 0) / 1000).toFixed(2);
+
+  const handleScanNext = () => {
+    if (isScanning) return;
+    if (cartCount >= DEMO_ITEMS.length) {
+      setCartCount(2);
+      playScanChirp();
+      return;
+    }
+
+    setIsScanning(true);
+    playScanChirp();
+
+    setTimeout(() => {
+      setCartCount((c) => Math.min(c + 1, DEMO_ITEMS.length));
+      setWeightPulse(true);
+      setTimeout(() => setWeightPulse(false), 600);
+    }, 400);
+
+    setTimeout(() => {
+      setIsScanning(false);
+    }, 850);
+  };
 
   useEffect(() => {
     const root = pageRef.current;
@@ -178,14 +238,65 @@ export default function Home() {
           </div>
           <div className="image-caption"><span className="caption-pulse" /> THE CHECKOUT THAT MOVES WITH YOU</div>
           <div className="shopper-card">
-            <div className="phone-topline"><span>smartcart</span><span className="phone-signal"><span /><span /><span /></span></div>
-            <div className="phone-store"><span className="store-icon"><Store size={16} /></span><span><small>SHOPPING AT</small><strong>Northside Market</strong></span><ChevronRight size={16} /></div>
+            <div className={`scanner-laser${isScanning ? " is-scanning" : ""}`} />
+            <div className="phone-topline">
+              <span>smartcart</span>
+              <span className="phone-signal"><span /><span /><span /></span>
+            </div>
+            <div className="phone-store">
+              <span className="store-icon"><Store size={16} /></span>
+              <span><small>SHOPPING AT</small><strong>Northside Market</strong></span>
+              <ChevronRight size={16} />
+            </div>
             <div className="phone-divider" />
-            <div className="scan-success"><span><Check size={14} /></span><span>Item scanned</span><small>just now</small></div>
-            <div className="phone-item"><span className="produce-thumb">🥑</span><span><strong>Ripe avocados</strong><small>Organic · 2 pieces</small></span><b>₹120</b></div>
-            <div className="phone-item"><span className="produce-thumb tomato">🍅</span><span><strong>Vine tomatoes</strong><small>Farm fresh · 500 g</small></span><b>₹84</b></div>
-            <div className="phone-total"><span>Basket total</span><strong>₹204</strong></div>
-            <div className="phone-weight"><Weight size={14} /><span>Weight verified</span><span className="weight-check"><CircleCheck size={14} /> matched</span></div>
+            <div className="scan-success">
+              <span><Check size={14} /></span>
+              <span>{isScanning ? "Reading barcode..." : "Item scanned"}</span>
+              <small>{isScanning ? "scanning" : "just now"}</small>
+            </div>
+            <div className="phone-items-container">
+              {visibleItems.map((item, idx) => (
+                <div
+                  key={item.id}
+                  className={`phone-item${idx === visibleItems.length - 1 && cartCount > 2 ? " phone-item-enter" : ""}`}
+                >
+                  <span className={`produce-thumb ${item.thumbClass}`}>{item.thumb}</span>
+                  <span>
+                    <strong>{item.name}</strong>
+                    <small>{item.desc}</small>
+                  </span>
+                  <b>₹{item.price}</b>
+                </div>
+              ))}
+            </div>
+            <div className="phone-total">
+              <span>Basket total ({visibleItems.length} items)</span>
+              <strong>₹{basketTotal}</strong>
+            </div>
+            <div className={`phone-weight${weightPulse ? " weight-verified-pulse" : ""}`}>
+              <Weight size={14} />
+              <span>Weight verified ({totalWeightKg} kg)</span>
+              <span className="weight-check"><CircleCheck size={14} /> matched</span>
+            </div>
+            <button
+              type="button"
+              className="phone-scan-trigger"
+              onClick={handleScanNext}
+              disabled={isScanning}
+              aria-label={cartCount < DEMO_ITEMS.length ? "Simulate scanning next grocery item" : "Reset grocery basket"}
+            >
+              {cartCount < DEMO_ITEMS.length ? (
+                <>
+                  <ScanLine size={12} />
+                  <span>Tap to simulate scan ({cartCount}/{DEMO_ITEMS.length})</span>
+                </>
+              ) : (
+                <>
+                  <RotateCcw size={12} />
+                  <span>Reset demo basket</span>
+                </>
+              )}
+            </button>
           </div>
           <div className="floating-tag"><span className="tag-icon"><ReceiptText size={16} /></span><span><strong>Bill as you shop</strong><small>No surprises at the end</small></span></div>
           <div className="hero-note"><Sparkles size={14} /> A better kind of last mile.</div>
@@ -265,13 +376,78 @@ export default function Home() {
           </div>
         </div>
         <div className="security-panel rise-in">
-          <div className="security-panel-head"><span className="security-pulse" /><span>LIVE TROLLEY CHECK</span><span className="security-state">ACTIVE</span></div>
-          <div className="security-example">
-            <div className="security-product"><span className="milk-icon">🥛</span><div><small>JUST SCANNED</small><strong>Milk · 1 litre</strong><span>Expected weight +1.0 kg</span></div><CheckCircle2 size={18} className="expected-check" /></div>
-            <div className="weight-meter"><div className="meter-label"><span>TROLLEY WEIGHT</span><b>+1.2 kg</b></div><div className="meter-track"><span /></div><div className="meter-scale"><span>expected +1.0 kg</span><span>verified</span></div></div>
-            <div className="security-alert"><span><ShieldCheck size={17} /></span><div><strong>Let's check one more item.</strong><small>That extra 0.2 kg? Identify it before checkout continues.</small></div></div>
+          <div className="security-panel-head">
+            <span className="security-pulse" />
+            <span>LIVE TROLLEY CHECK</span>
+            <div className="security-mode-toggle">
+              <button
+                type="button"
+                className={`security-mode-btn${securityMode === "verified" ? " is-active is-verified" : ""}`}
+                onClick={() => setSecurityMode("verified")}
+                aria-pressed={securityMode === "verified"}
+              >
+                Match (1.0 kg)
+              </button>
+              <button
+                type="button"
+                className={`security-mode-btn${securityMode === "discrepancy" ? " is-active is-discrepancy" : ""}`}
+                onClick={() => setSecurityMode("discrepancy")}
+                aria-pressed={securityMode === "discrepancy"}
+              >
+                Mismatch (+0.2 kg)
+              </button>
+            </div>
           </div>
-          <div className="security-panel-foot"><LockKeyhole size={14} /> Extra weight is resolved before a bill can be generated.</div>
+          <div className="security-example">
+            <div className="security-product">
+              <span className="milk-icon">🥛</span>
+              <div>
+                <small>JUST SCANNED</small>
+                <strong>Milk · 1 litre</strong>
+                <span>Expected weight +1.0 kg</span>
+              </div>
+              <CheckCircle2 size={18} className="expected-check" />
+            </div>
+            <div className="weight-meter">
+              <div className="meter-label">
+                <span>TROLLEY WEIGHT</span>
+                <b style={{ color: securityMode === "verified" ? "#9bc579" : "#ff7a2f" }}>
+                  {securityMode === "verified" ? "+1.0 kg" : "+1.2 kg"}
+                </b>
+              </div>
+              <div className="meter-track">
+                <span
+                  style={{
+                    width: securityMode === "verified" ? "72%" : "84%",
+                    background:
+                      securityMode === "verified"
+                        ? "linear-gradient(90deg, #6ea04f 100%, #6ea04f 100%)"
+                        : "linear-gradient(90deg, #7fa363 70%, var(--orange) 70%)",
+                  }}
+                />
+              </div>
+              <div className="meter-scale">
+                <span>expected +1.0 kg</span>
+                <span style={{ color: securityMode === "verified" ? "#9bc579" : "#ffaa77" }}>
+                  {securityMode === "verified" ? "✓ verified matched" : "alert: +0.2 kg unverified"}
+                </span>
+              </div>
+            </div>
+            <div className={`security-alert ${securityMode === "verified" ? "is-verified" : "is-discrepancy"}`}>
+              <span>{securityMode === "verified" ? <CheckCircle2 size={17} /> : <ShieldCheck size={17} />}</span>
+              <div>
+                <strong>{securityMode === "verified" ? "Weight verified and cleared." : "Let's check one more item."}</strong>
+                <small>
+                  {securityMode === "verified"
+                    ? "Trolley load matches scanned barcode within 5g tolerance. Gate pass cleared."
+                    : "That extra 0.2 kg? Identify it or turnstile attendant will assist at the gate."}
+                </small>
+              </div>
+            </div>
+          </div>
+          <div className="security-panel-foot">
+            <LockKeyhole size={14} /> Extra weight is resolved before exit pass generates without attendant flag.
+          </div>
         </div>
       </section>
 
@@ -285,11 +461,78 @@ export default function Home() {
         <div className="reminder-visual rise-in">
           <div className="reminder-orbit orbit-one" /><div className="reminder-orbit orbit-two" />
           <div className="reminder-widget">
-            <div className="widget-header"><span className="widget-brand"><span className="brand-mark mini"><ShoppingBasket size={14} /></span> smartcart</span><span className="widget-more">•••</span></div>
-            <div className="widget-greeting"><small>BEFORE YOU CHECK OUT</small><strong>One little reminder</strong></div>
-            <div className="atta-reminder"><span className="atta-bag">🌾</span><div><small>YOU USUALLY BUY</small><strong>Atta</strong><span>Looks like it might be missing from your basket.</span></div></div>
-            <div className="widget-actions"><button type="button" className="widget-button">Add to basket <ArrowRight size={14} /></button><button type="button" className="widget-dismiss">Not today</button></div>
-            <div className="widget-private"><LockKeyhole size={12} /> Based on your past bills</div>
+            <div className="widget-header">
+              <span className="widget-brand">
+                <span className="brand-mark mini"><ShoppingBasket size={14} /></span> smartcart
+              </span>
+              <span className="widget-more">•••</span>
+            </div>
+            {reminderState === "dismissed" ? (
+              <div style={{ padding: "24px 0", textAlign: "center" }}>
+                <p style={{ margin: 0, fontSize: "11px", color: "#77796f" }}>Reminder hidden for this visit.</p>
+                <button
+                  type="button"
+                  style={{
+                    marginTop: "8px",
+                    background: "none",
+                    border: "none",
+                    color: "var(--orange)",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setReminderState("idle")}
+                >
+                  Undo
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="widget-greeting">
+                  <small>BEFORE YOU CHECK OUT</small>
+                  <strong>{reminderState === "added" ? "Item in trolley" : "One little reminder"}</strong>
+                </div>
+                <div className="atta-reminder" style={{ background: reminderState === "added" ? "#e9f2e3" : "#f2f0e8" }}>
+                  <span className="atta-bag">🌾</span>
+                  <div>
+                    <small>YOU USUALLY BUY</small>
+                    <strong>Atta · 5 kg</strong>
+                    <span>
+                      {reminderState === "added"
+                        ? "Added to your digital basket and trolley tare (+5.0 kg)."
+                        : "Looks like it might be missing from your basket."}
+                    </span>
+                  </div>
+                </div>
+                <div className="widget-actions">
+                  <button
+                    type="button"
+                    className={`widget-button${reminderState === "added" ? " is-added" : ""}`}
+                    onClick={() => setReminderState(reminderState === "added" ? "idle" : "added")}
+                  >
+                    {reminderState === "added" ? (
+                      <>
+                        <span>Added to basket (+5.0 kg)</span>
+                        <Check size={14} />
+                      </>
+                    ) : (
+                      <>
+                        <span>Add to basket</span>
+                        <ArrowRight size={14} />
+                      </>
+                    )}
+                  </button>
+                  {reminderState !== "added" && (
+                    <button type="button" className="widget-dismiss" onClick={() => setReminderState("dismissed")}>
+                      Not today
+                    </button>
+                  )}
+                </div>
+                <div className="widget-private">
+                  <LockKeyhole size={12} /> Based on your past bills
+                </div>
+              </>
+            )}
           </div>
           <div className="reminder-sticker"><Sparkles size={15} /> Thought of that, too.</div>
         </div>
